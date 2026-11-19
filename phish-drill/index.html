@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Phish Drill – Phishing Awareness Simulator</title>
+
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+  <!-- Our styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ Navbar ============ -->
+  <header class="top">
+    <a class="logo" href="#top">Phish<span>Drill</span></a>
+    <nav>
+      <a href="#simulator">Simulator</a>
+      <a href="#flags">Red flags</a>
+      <a href="#simulator" class="btn">Start drill</a>
+      <button class="btn ghost" id="authBtn" type="button">Log in</button>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ Hero ============ -->
+    <div class="hero">
+      <div>
+        <h1>Spot the phish before it spots you.</h1>
+        <p class="lead">Practise on six simulated emails. Learn the warning signs in minutes, with no real accounts at risk.</p>
+        <a class="btn" href="#simulator">Start the drill</a>
+      </div>
+
+      <!-- Illustration: an email caught on a fishing hook (drawn with SVG) -->
+      <figure class="art">
+        <svg viewBox="0 0 480 420" role="img" aria-labelledby="artT artD">
+          <title id="artT">Phishing illustration</title>
+          <desc id="artD">An email with a warning mark hanging from a fishing hook above rippling water, with a password and a one-time code floating nearby.</desc>
+          <defs>
+            <radialGradient id="glow">
+              <stop offset="0" stop-color="#4f1590" stop-opacity=".6"/>
+              <stop offset="1" stop-color="#4f1590" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- soft glow behind everything -->
+          <circle cx="240" cy="210" r="190" fill="url(#glow)"/>
+
+          <!-- water lines + ripples -->
+          <g fill="none" stroke="var(--water)" stroke-width="2" stroke-linecap="round" opacity=".65">
+            <path d="M40 350 q30 -12 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0"/>
+            <path d="M70 380 q30 -12 60 0 t60 0 t60 0 t60 0 t60 0 t60 0" opacity=".6"/>
+          </g>
+          <ellipse class="rip" cx="240" cy="352" rx="46" ry="9" fill="none" stroke="var(--water)" stroke-width="2"/>
+          <ellipse class="rip b" cx="240" cy="352" rx="46" ry="9" fill="none" stroke="var(--water)" stroke-width="2"/>
+
+          <!-- floating "stolen" info cards -->
+          <g class="chip">
+            <rect x="22" y="110" width="132" height="46" rx="10" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>
+            <text x="36" y="129" font-size="11" fill="var(--muted)" font-family="IBM Plex Sans,sans-serif">Password</text>
+            <text x="36" y="147" font-size="16" fill="var(--ink)" font-family="IBM Plex Sans,sans-serif" letter-spacing="3">••••••••</text>
+          </g>
+          <g class="chip b">
+            <rect x="334" y="150" width="124" height="46" rx="10" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>
+            <text x="348" y="169" font-size="11" fill="var(--muted)" font-family="IBM Plex Sans,sans-serif">OTP / UPI PIN</text>
+            <text x="348" y="187" font-size="16" fill="var(--ink)" font-family="IBM Plex Sans,sans-serif" letter-spacing="3">4 8 2 1</text>
+          </g>
+
+          <!-- the swinging part: line, envelope, warning badge, hook -->
+          <g class="swing">
+            <path d="M240 0 V150" stroke="var(--ink)" stroke-width="2" fill="none"/>
+            <g transform="rotate(-8 230 255)">
+              <rect x="160" y="215" width="140" height="92" rx="10" fill="var(--surface)" stroke="var(--water)" stroke-width="3"/>
+              <path d="M164 222 L230 270 L296 222" fill="none" stroke="var(--water)" stroke-width="3" stroke-linejoin="round"/>
+            </g>
+            <g transform="translate(294 224)">
+              <circle r="20" fill="var(--flag)"/>
+              <path d="M0 -9 V3" stroke="#050505" stroke-width="4" stroke-linecap="round"/>
+              <circle cy="10" r="2.6" fill="#050505"/>
+            </g>
+            <path d="M240 150 V190 C240 232 196 232 196 198 L186 188" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </svg>
+        <figcaption>Phishing is just bait. Don’t bite.</figcaption>
+      </figure>
+    </div>
+
+    <!-- ============ Simulator (filled in by js/app.js) ============ -->
+    <section id="simulator">
+      <h2>Phishing simulator</h2>
+      <p class="sub">Open each email in your inbox, hover over links to check where they really go, then decide: phishing or safe. Earn coins and XP, level up and unlock badges. Every email is made up and no link works.</p>
+      <div class="sim" id="sim"></div>
+    </section>
+
+    <!-- ============ Red flags ============ -->
+    <section id="flags">
+      <h2>Five red flags to check every time</h2>
+      <p class="sub">Most phishing emails fail at least one of these checks.</p>
+      <div class="flags" id="flagList">
+        <div>
+          <h3>The sender’s address</h3>
+          <p>Look past the display name. Lookalike domains such as paypa1 or extra words like “-login” are a giveaway.</p>
+        </div>
+        <div>
+          <h3>Pressure to act fast</h3>
+          <p>“Within 2 hours” and “final warning” exist to stop you thinking. Real services give you time.</p>
+        </div>
+        <div>
+          <h3>Links that don’t match</h3>
+          <p>Hover before you click. If the address differs from the text, don’t open it.</p>
+        </div>
+        <div>
+          <h3>Requests for secrets</h3>
+          <p>No genuine service asks for your password, OTP or card details by email.</p>
+        </div>
+        <div>
+          <h3>Odd attachments</h3>
+          <p>Files like “form.pdf.exe” or unexpected .html and .zip files can install malware.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>Phish Drill is an educational simulator. It contains no real login pages and collects no data. If you get a suspicious email, report it to your IT team and delete it.</footer>
+</div>
+
+<!-- ============ Login / sign-up popup ============ -->
+<dialog id="authDlg" aria-labelledby="authTitle">
+  <button class="x" id="authClose" type="button" aria-label="Close">×</button>
+  <h2 id="authTitle">Your account</h2>
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" id="tabLogin" aria-selected="true">Log in</button>
+    <button type="button" role="tab" id="tabSignup" aria-selected="false">Sign up</button>
+  </div>
+
+  <form id="authForm">
+    <label id="nameRow" style="display:none">Your name<input name="n" autocomplete="name"></label>
+    <label>Username<input name="u" required autocomplete="username"></label>
+    <label>Password<input name="p" type="password" required autocomplete="current-password"></label>
+    <p class="err" id="authErr" role="alert"></p>
+    <button class="btn" id="authGo" type="submit">Log in</button>
+  </form>
+
+  <p class="hint">Practice account only. It is saved in this browser, so never use a password you use anywhere else.</p>
+</dialog>
+
+<!-- Scroll to top / bottom button -->
+<button id="scrollBtn" class="scroll-btn" type="button" aria-label="Scroll to bottom">
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+</button>
+
+<!-- Scripts: emails.js must load before app.js because app.js uses EMAILS -->
+<script src="js/emails.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

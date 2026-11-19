@@ -1,0 +1,566 @@
+/* =====================================================
+   Phish Drill – styles
+   Sections:
+     1. Colours & base
+     2. Layout (header, hero, sections, footer)
+     3. Buttons
+     4. Hero illustration
+     5. Email card + simulator
+     6. Inbox, level bar, badges
+     7. Login popup
+     8. Coins, toasts, confetti, scroll button
+     9. Scroll-in animation for red flags
+    10. Small screens + reduced motion
+   ===================================================== */
+
+
+/* ---------- 1. Colours & base ---------- */
+:root {
+  color-scheme: dark;
+  --bg:        #050505;   /* page background */
+  --surface:   #0d0716;   /* cards */
+  --ink:       #C0C0C0;   /* main text (silver) */
+  --muted:     #948fa0;   /* softer text */
+  --line:      #2b1646;   /* borders */
+  --purple:    #3B0A6B;   /* main accent */
+  --purple-hi: #4f1590;   /* accent on hover */
+  --water:     #b999e8;   /* light purple highlights */
+  --flag:      #ff7a90;   /* warning red */
+  --flagbg:    #2b0f1a;
+  --safe:      #6fd49b;   /* correct green */
+  --safebg:    #0e2318;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* keeps content clear of phone notches */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 1rem/1.6 "IBM Plex Sans", system-ui, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: "Bricolage Grotesque", "IBM Plex Sans", system-ui, sans-serif;
+  line-height: 1.1;
+  margin: 0;
+}
+
+a { color: var(--water); }
+:focus-visible { outline: 3px solid var(--water); outline-offset: 2px; }
+
+
+/* ---------- 2. Layout ---------- */
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* header */
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem 0;
+}
+.logo {
+  font: 800 1.25rem "Bricolage Grotesque", sans-serif;
+  text-decoration: none;
+  color: var(--ink);
+}
+.logo span { color: var(--water); }
+nav a {
+  margin-left: 1.25rem;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 500;
+}
+nav a:hover { color: var(--ink); }
+nav a.btn { color: var(--ink); }
+
+/* hero */
+.hero {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  padding: 3rem 0 4.5rem;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+.hero p.lead {
+  font-size: 1.15rem;
+  color: var(--muted);
+  max-width: 34ch;
+  margin: 1.25rem 0 1.75rem;
+}
+
+/* content sections */
+section {
+  padding: 4rem 0;
+  border-top: 1px solid var(--line);
+}
+section h2 {
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  margin-bottom: .5rem;
+}
+section .sub {
+  color: var(--muted);
+  max-width: 58ch;
+  margin: 0 0 2rem;
+}
+
+/* red flags grid */
+.flags {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+}
+.flags h3 { font-size: 1.2rem; margin-bottom: .4rem; }
+.flags p  { margin: 0; color: var(--muted); }
+
+footer {
+  padding: 2.5rem 0 3rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+
+/* ---------- 3. Buttons ---------- */
+.btn {
+  display: inline-block;
+  background: var(--purple);
+  color: var(--ink);
+  border: 1px solid var(--purple-hi);
+  border-radius: 10px;
+  padding: .85rem 1.4rem;
+  font: 600 1rem "IBM Plex Sans", sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .2s, transform .15s;
+}
+.btn:hover  { background: var(--purple-hi); transform: translateY(-2px); }
+.btn:active { transform: none; }
+
+.btn.ghost { background: transparent; border-color: var(--ink); }
+.btn.ghost:hover { background: var(--surface); }
+
+.btn.bad { background: #a3162f; border-color: #a3162f; color: #fff; }  /* "Report as phishing" */
+.btn.ok  { background: #1c6f43; border-color: #1c6f43; color: #fff; }  /* "Mark as safe" */
+
+#authBtn { margin-left: 1rem; padding: .6rem 1.1rem; }
+
+
+/* ---------- 4. Hero illustration ---------- */
+.art { margin: 0; }
+.art svg { display: block; width: 100%; height: auto; max-height: 440px; }
+.art figcaption {
+  text-align: center;
+  color: var(--muted);
+  font-size: .95rem;
+  margin-top: .25rem;
+}
+
+/* parts of the illustration that move */
+.swing { transform-origin: 240px 0; animation: swing 4s ease-in-out infinite; }
+.rip   { transform-box: fill-box; transform-origin: center; animation: ripple 2.8s ease-out infinite; }
+.rip.b { animation-delay: 1.4s; }
+.chip  { animation: bob 4s ease-in-out infinite; }
+.chip.b { animation-delay: 1.5s; }
+
+/* hero text slides up when the page loads */
+.hero h1    { animation: rise .8s cubic-bezier(.2, .7, .2, 1) .05s both; }
+.hero .lead { animation: rise .8s cubic-bezier(.2, .7, .2, 1) .2s both; }
+.hero .btn  { animation: rise .8s cubic-bezier(.2, .7, .2, 1) .35s both; }
+.hero .art  { animation: rise .9s cubic-bezier(.2, .7, .2, 1) .35s both; }
+
+
+/* ---------- 5. Email card + simulator ---------- */
+.sim { max-width: 100%; }
+
+.mail {
+  background: var(--surface);
+  border: 1px solid var(--purple-hi);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 18px 40px -20px rgba(59, 10, 107, .9);
+  animation: slideIn .4s cubic-bezier(.2, .7, .2, 1) both;
+}
+.mail .meta {
+  font-size: .9rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: .75rem;
+  margin-bottom: .9rem;
+}
+.mail .meta b { color: var(--ink); }
+.mail .subj {
+  font: 700 1.1rem "Bricolage Grotesque", sans-serif;
+  margin-bottom: .5rem;
+}
+.mail .body { white-space: pre-line; }
+.mail .link {
+  color: var(--water);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  font: inherit;
+  padding: 0;
+}
+
+/* shows where a link really goes */
+.status {
+  margin-top: .9rem;
+  font: 500 .85rem ui-monospace, Menlo, monospace;
+  color: var(--muted);
+  min-height: 1.3rem;
+}
+
+.choices { display: flex; gap: .75rem; margin-top: 1rem; flex-wrap: wrap; }
+.choices .btn { flex: 1 1 150px; }
+
+/* feedback box after answering */
+.result {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  animation: pop .3s both;
+}
+.result.right { background: var(--safebg); }
+.result.wrong { background: var(--flagbg); animation: shake .45s both; }
+.result h3 { font-size: 1.15rem; margin-bottom: .4rem; }
+.result ul { margin: .4rem 0 1rem; padding-left: 1.2rem; }
+
+/* final score screen */
+.final { text-align: left; }
+.final .score {
+  font: 800 4rem "Bricolage Grotesque", sans-serif;
+  line-height: 1;
+  animation: pop .5s both;
+}
+.final .earned {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: .9rem 0 1.25rem;
+  font-weight: 600;
+}
+.lvl-line { color: var(--water); font-weight: 600; margin: .25rem 0; }
+.fa { display: flex; gap: .75rem; flex-wrap: wrap; }
+
+/* "log in first" box */
+.gate {
+  border: 1px dashed var(--purple-hi);
+  border-radius: 14px;
+  padding: 2rem;
+  background: var(--surface);
+}
+.gate h3 { font-size: 1.4rem; margin-bottom: .4rem; }
+.gate p  { color: var(--muted); margin: 0 0 1.25rem; }
+
+
+/* ---------- 6. Inbox, level bar, badges ---------- */
+
+/* top bar: level, XP, sound, coins */
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: .9rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.lv { flex: 1; max-width: 360px; }
+.lvt { display: flex; justify-content: space-between; gap: .75rem; font-size: .9rem; margin-bottom: .4rem; }
+.lvt span { color: var(--muted); }
+.xp { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.xp i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--purple-hi), var(--water));
+  transition: width .7s cubic-bezier(.2, .7, .2, 1);
+}
+.hr { display: flex; align-items: center; gap: 1rem; }
+.mute {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  width: 2.3rem;
+  height: 2.3rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--ink);
+}
+.mute:hover { background: var(--purple); }
+
+/* two columns: email list + reading pane */
+.inbox {
+  display: grid;
+  grid-template-columns: minmax(240px, 330px) 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.list {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.lh {
+  display: flex;
+  justify-content: space-between;
+  padding: .8rem 1rem;
+  border-bottom: 1px solid var(--line);
+  font-size: .9rem;
+}
+.lh span { color: var(--muted); }
+
+.row {
+  display: flex;
+  gap: .6rem;
+  width: 100%;
+  text-align: left;
+  padding: .8rem 1rem;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  transition: background .15s;
+}
+.row:last-child { border-bottom: 0; }
+.row:hover { background: rgba(59, 10, 107, .3); }
+.row.sel   { background: var(--purple); }
+
+.mk { width: 1.1rem; flex: none; font-weight: 700; }           /* ✓ / ✗ / dot */
+.row.ok .mk { color: var(--safe); }
+.row.no .mk { color: var(--flag); }
+.row.new .mk::before {                                          /* unread dot */
+  content: "";
+  display: block;
+  width: .55rem;
+  height: .55rem;
+  margin-top: .45rem;
+  border-radius: 50%;
+  background: var(--water);
+}
+.rt { display: flex; flex-direction: column; min-width: 0; }
+.rt b { font-size: .95rem; }
+.row:not(.new) .rt b { font-weight: 500; color: var(--muted); }
+.sj, .pv { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sj { font-size: .9rem; }
+.pv { font-size: .8rem; color: var(--muted); }
+
+.pane { min-height: 320px; max-width: 720px; }
+.empty {
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: 3rem 1.5rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* badges */
+.bh { margin: 1.5rem 0 .75rem; font-size: 1.15rem; }
+.badges {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: .75rem;
+  margin-bottom: 1.5rem;
+}
+.bd {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  padding: .9rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  opacity: .4;                 /* locked badges are faded */
+  filter: grayscale(1);
+}
+.bd.on  { opacity: 1; filter: none; border-color: var(--purple-hi); background: var(--surface); }
+.bd.new { animation: pop .6s both; }
+.bd span  { font-size: 1.7rem; }
+.bd small { color: var(--muted); }
+
+
+/* ---------- 7. Login popup ---------- */
+dialog {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--purple-hi);
+  border-radius: 16px;
+  padding: 1.5rem;
+  width: min(92vw, 400px);
+  box-shadow: 0 30px 60px -20px rgba(59, 10, 107, .9);
+}
+dialog::backdrop { background: rgba(5, 5, 5, .82); }
+dialog[open] { animation: pop .25s both; }
+dialog h2 { font-size: 1.6rem; margin-bottom: 1rem; }
+dialog .x {
+  position: absolute;
+  top: .6rem;
+  right: .8rem;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font-size: 1.6rem;
+  cursor: pointer;
+  line-height: 1;
+}
+dialog label { display: block; margin-bottom: .9rem; font-weight: 500; font-size: .95rem; }
+dialog input {
+  display: block;
+  width: 100%;
+  margin-top: .3rem;
+  padding: .7rem .8rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+dialog input:focus { outline: 2px solid var(--water); outline-offset: 1px; }
+dialog form .btn { width: 100%; }
+
+.tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
+.tabs button {
+  flex: 1;
+  padding: .55rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: 600 .95rem "IBM Plex Sans", sans-serif;
+  cursor: pointer;
+}
+.tabs button[aria-selected="true"] {
+  background: var(--purple);
+  border-color: var(--purple-hi);
+  color: var(--ink);
+}
+.err  { color: var(--flag); min-height: 1.4rem; margin: .2rem 0 .6rem; font-size: .9rem; }
+.hint { color: var(--muted); font-size: .85rem; margin: 1rem 0 0; }
+
+
+/* ---------- 8. Coins, toasts, confetti, scroll button ---------- */
+.coin {
+  display: inline-block;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: inset 0 0 0 2px #8e8e8e, inset 0 0 0 4px var(--ink);
+}
+.coins { display: inline-flex; align-items: center; gap: .45rem; position: relative; color: var(--ink); font-weight: 600; }
+.coins.bump .coin { animation: bump .5s ease; }
+.coins .plus {                                    /* the little "+1" that floats up */
+  position: absolute;
+  right: 0;
+  top: -1.1rem;
+  color: var(--water);
+  font-weight: 700;
+  animation: floatUp .85s ease-out forwards;
+}
+
+#toasts {
+  position: fixed;
+  top: calc(1rem + env(safe-area-inset-top, 0px));
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  z-index: 40;
+  pointer-events: none;
+}
+.toast {
+  background: var(--purple);
+  color: var(--ink);
+  border: 1px solid var(--purple-hi);
+  padding: .7rem 1rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px -10px rgba(59, 10, 107, .9);
+  animation: slideIn .35s both, fadeOut .4s 2.7s forwards;
+}
+
+.confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+
+.scroll-btn {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right, 0px));
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--purple);
+  color: var(--ink);
+  border: 1px solid var(--purple-hi);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 8px 20px -8px rgba(59, 10, 107, .9);
+  z-index: 20;
+}
+.scroll-btn:hover { opacity: .9; }
+.scroll-btn svg { transition: transform .25s; }
+.scroll-btn.up svg { transform: rotate(180deg); }      /* arrow flips when near the bottom */
+
+
+/* ---------- 9. Red flags fade in as you scroll ---------- */
+.flags > div { transition: opacity .6s ease, transform .6s ease; }
+.flags > div:nth-child(2) { transition-delay: .1s; }
+.flags > div:nth-child(3) { transition-delay: .2s; }
+.flags > div:nth-child(4) { transition-delay: .3s; }
+.flags > div:nth-child(5) { transition-delay: .4s; }
+.flags.pre > div { opacity: 0; transform: translateY(20px); }   /* "pre" is removed by JS */
+
+
+/* ---------- Animations (keyframes) ---------- */
+@keyframes rise    { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes pop     { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes shake   { 0%, 100% { transform: none; } 20% { transform: translateX(-8px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
+@keyframes fadeOut { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes bump    { 0% { transform: scale(1) rotateY(0); } 45% { transform: scale(1.4) rotateY(180deg); } 100% { transform: scale(1) rotateY(360deg); } }
+@keyframes floatUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-26px); } }
+@keyframes swing   { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+@keyframes ripple  { from { transform: scale(.4); opacity: .9; } to { transform: scale(1.5); opacity: 0; } }
+@keyframes bob     { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+
+/* ---------- 10. Small screens + reduced motion ---------- */
+@media (max-width: 820px) {
+  .hero  { grid-template-columns: 1fr; gap: 2rem; padding-top: 1.5rem; }
+  nav a:not(:last-child) { display: none; }   /* hide text links, keep the buttons */
+  .inbox { grid-template-columns: 1fr; }
+  .hud   { flex-wrap: wrap; }
+  .lv    { max-width: none; width: 100%; }
+}
+
+/* people who turn off animations in their device settings */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
